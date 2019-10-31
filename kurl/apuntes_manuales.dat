@@ -1,0 +1,87 @@
+## 
+$ docker pull nginx
+
+## descarga una versión concreta
+$ docker run -p 8080:80 nginx:1.17.5
+
+$ docker run -p 8080:80 nginx
+$ docker run -p 15672:15672 rabbitmq:management
+
+
+## for list all docker processes
+$ docker ps
+$ docker stop vibrant_liskov ## [Names or CONTAINER ID] 
+$ docker ps -a  # list all processes
+
+## remove docker container
+$ docker rm -f vibrant_liskov
+$ docker rm -f $(docker ps -qa) ## remove all containers
+
+
+## list images
+$ docker images  ## list locally images
+
+
+
+
+## connectarse a una imagen de ubuntu
+# se conecta de una forma parecida a SSH
+$ docker run -it ubuntu
+
+root@245..:/#
+root@245..:/# ifconfig
+
+
+
+# after install curl
+
+# make commit for does not lose installation changes
+
+$ docker ps
+# hash
+$ docker commit 245dd2a.. kurl 
+
+$ docker images
+output:
+REPOSTORY TAG MAGE ID CREATED SIZE
+kurl		..	..	..	..		..
+
+
+## accessing to container
+
+$ docker run -it kurl
+root@245..:/# curl google.es
+output: 
+http://google.es
+<html>
+..
+
+
+
+
+
+$ docker tag kurl pauopez/kurl:0.1 #cambia el tag
+$ docker login #login en la cuenta de docker hub
+$ docker push paulopez/kurl:0.1 #sube los cambios a docker hub
+
+## descarga la imagen en la repo local
+$ docker pull paulopez/kurl:0.1
+
+
+###########################################
+## despues de crear el docker file
+$ docker build -f kurl/Dockerfile -t paulopez/kurl:1.0
+
+## despues de crear entrypoint en Dockerfile
+$ docker run paulopez/kurl:1.0 google.com
+
+
+
+
+
+## PIPELINE
+# monta un volumen
+$ docker run -v $(pwd)/build:/app -w /app ubuntu
+# -p docker-port:host port
+# -d detach (desacoplar terminal)
+$ docker run -v $(pwd)/build:/app -w /app -p 8080:80 -d ubuntu ./vottingapp

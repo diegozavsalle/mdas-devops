@@ -11,12 +11,14 @@ rm -rf ./build || true # para no enviar código de error en caso que falle
 
 
 # build
+GOOS=linux build
 mkdir build
 go build -o ./build ./src/votingapp || exit 1
 cp -r ./src/votingapp/ui ./build
 
 pushd build # cambiar a directorio build/
 ./votingapp &
+docker run ubuntu ## ejecutar ubuntu
 popd # deshacer cambio de directorio
 
 # test
