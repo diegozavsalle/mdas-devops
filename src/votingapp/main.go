@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/labstack/echo"
@@ -14,6 +15,7 @@ var (
 )
 
 func main() {
+	time.Sleep(5 * time.Second)
 	e.Static("/", "ui")
 
 	api := "/vote"
