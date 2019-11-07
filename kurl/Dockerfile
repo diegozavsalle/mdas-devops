@@ -4,4 +4,3 @@ RUN apt-get update && apt-get install curl -y && rm -rf /var/lib/apt/lists/*
 
 ## ejecuta directamente el comando curl
 ENTRYPOINT ["curl"]
-
