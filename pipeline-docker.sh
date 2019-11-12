@@ -11,6 +11,19 @@ build(){
     docker build \
         -t paulopez/votingapp \
         .src/votingapp
+
+    docker run \
+        --name myredis \
+        --network votingapp \
+        -d redis
+
+    docker run \
+        --name myvotingapp \
+        --network votingapp \
+        -p 8080:80 \
+        -e REDIS="myredis:6379" \
+        -d paulopez/votingapp
+
     # docker run --name myvotingapp -v $(pwd)/build:/app -w /app -p 8080:80 -d ubuntu ./vottingapp
     docker run --name myvotingapp -p 8080:80 -d paulopez/votingapp
 }
