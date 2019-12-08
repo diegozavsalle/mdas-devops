@@ -25,7 +25,8 @@ func main() {
 	e.DELETE(api, log(finishVoting))
 	e.GET("/ws", log(serveWs))
 
-	e.Logger.Fatal(e.Start(":80"))
+	// cambio en el puerto que se lanza la aplicación, para que no requiera permisos sudo
+	e.Logger.Fatal(e.Start(":8080"))
 }
 
 func sendMessage(value interface{}) error {

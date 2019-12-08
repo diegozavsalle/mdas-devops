@@ -9,6 +9,7 @@ deps(){
 
 # cleanup
 cleanup(){
+    # argumento cambiado al ejecutarlo en ubuntu de $1 a $2
     pkill votingapp || ps aux | grep votingapp | awk {'print $1'} | head -1 | xargs kill -9
     rm -rf build
 }
@@ -42,32 +43,7 @@ retry(){
 
 # test
 test() {
-    votingurl='http://localhost/vote'
-    curl --url  $votingurl \
-        --request POST \
-        --data '{"topics":["dev", "ops"]}' \
-        --header "Content-Type: application/json" 
-
-    curl --url $votingurl \
-        --request PUT \
-        --data '{"topic": "dev"}' \
-        --header "Content-Type: application/json" 
-    
-    winner=$(curl --url $votingurl \
-        --request DELETE \
-        --header "Content-Type: application/json" | jq -r '.winner')
-
-    echo "Winner IS "$winner
-
-    expectedWinner="dev"
-
-    if [ "$expectedWinner" == "$winner" ]; then
-        echo 'TEST PASSED'
-        return 0
-    else
-        echo 'TEST FAILED'
-        return 1
-    fi
+    python3 testIT.py
 }
 
 deps
