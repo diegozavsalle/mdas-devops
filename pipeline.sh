@@ -3,6 +3,7 @@ set -e
 
 # install deps
 deps(){
+    # install go manually
     go get github.com/gorilla/websocket
     go get github.com/labstack/echo
 }
