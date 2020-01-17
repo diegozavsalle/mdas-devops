@@ -1,27 +1,10 @@
-docker network create votingapp_network || true
-
 #cleanup
-docker rm -f diegovotingapp || true
-docker rm -f diegovotingapp-test || true
+docker-compose down
 
 #build
-docker build \
-    -t diego:votingapp \
-    ./src/votingapp ## context
+docker-compose build
 
-docker run \
-    --name diegovotingapp \
-    --network votingapp_network \
-    -p 8080:8080 \
-    -d diego:votingapp
+docker-compose up
 
 # test
-docker build \
-    -t diego:votingapp-test \
-    ./test
-
-docker run \
-    --name diegovotingapp-test \
-    --rm -e VOTINGAPP_HOST="diegovotingapp:8080" \
-    --network votingapp_network -it \
-    diego:votingapp-test
+# se ejecuta directamente en Dockerfile del directorio test

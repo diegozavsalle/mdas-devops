@@ -5,31 +5,37 @@ services:
   #   image: redis
 
   myvotingapp:
-    image: paulopez/votingapp
+    image: diego/votingapp
     build:
       dockerfile: Dockerfile
       # no es necesario agregar el context
       context: ./src/votingapp
-    ports: 
-      - 80:8080
     # environment:
       # REDIS: "myredis:6379"
-    # volumes:
-    #   - myapp.conf:/app/myapp.conf
-  # mynginx:
-  #   image: nginx
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - votingapp-network
 
-  # mytest:
-  #   image: paulopez/votingapp-test
-  #   build:
-  #     context: ./test
-  #   environment:
-  #     VOTINGAPP_HOST: "myvotingapp"
+  mynginx:
+    image: nginx
+    ports:
+      - 80:80
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - votingapp-network
+
+  mytest:
+    image: diego/votingapp-test
+    build:
+      context: ./test
+    container_name: mytest
+    environment:
+      VOTINGAPP_HOST: "myvotingapp:8080"
+    networks:
+      - votingapp-network
 
 
-# Commands: 
-# $ docker-compose build
-# $ docker-compose up
-# $ 
+#Docker Networks
+networks:
+  votingapp-network:
+    driver: bridge
