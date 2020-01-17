@@ -1,52 +1,27 @@
-#!/bin/bash
-set -e
+docker network create votingapp_network || true
 
-# install deps
-deps(){
-    go get github.com/gorilla/websocket
-    go get github.com/labstack/echo
-}
+#cleanup
+docker rm -f diegovotingapp || true
+docker rm -f diegovotingapp-test || true
 
-# cleanup
-cleanup(){
-    # argumento cambiado al ejecutarlo en ubuntu de $1 a $2
-    pkill votingapp || ps aux | grep votingapp | awk {'print $1'} | head -1 | xargs kill -9
-    rm -rf build
-}
+#build
+docker build \
+    -t diego:votingapp \
+    ./src/votingapp ## context
 
-# build 
-build(){
-    mkdir build
-    go build -o ./build ./src/votingapp 
-    cp -r ./src/votingapp/ui ./build
-
-    pushd build
-    ./votingapp &
-    popd
-}
-
-retry(){
-    n=0
-    interval=5
-    retries=3
-    $@ && return 0
-    until [ $n -ge $retries ]
-    do
-        n=$(($n+1))
-        echo "Retrying...$n of $retries, wait for $interval seconds"
-        sleep $interval
-        $@ && return 0
-    done
-
-    return 1
-}
+docker run \
+    --name diegovotingapp \
+    --network votingapp_network \
+    -p 8080:8080 \
+    -d diego:votingapp
 
 # test
-test() {
-    python3 testIT.py
-}
+docker build \
+    -t diego:votingapp-test \
+    ./test
 
-deps
-cleanup || true
-build
-retry test
+docker run \
+    --name diegovotingapp-test \
+    --rm -e VOTINGAPP_HOST="diegovotingapp:8080" \
+    --network votingapp_network -it \
+    diego:votingapp-test

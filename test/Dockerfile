@@ -1,11 +1,13 @@
-FROM ubuntu:18.04
+FROM alpine:3.10.3
 
-RUN apt-get update && apt-get install -y \
-    curl \
-    jq \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache --update \
+    bash \
+    linux-headers \
+    python3 \
+    && pip3 install requests
 
 COPY test.sh .
+COPY testIT.py .
 RUN chmod +x test.sh
 
 ENTRYPOINT ["bash", "-c", "./test.sh" ]
