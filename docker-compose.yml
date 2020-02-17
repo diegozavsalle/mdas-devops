@@ -6,6 +6,7 @@ services:
 
   myvotingapp:
     image: diego/votingapp
+    container_name: myvoting_app
     build:
       dockerfile: Dockerfile
       # no es necesario agregar el context
@@ -17,6 +18,7 @@ services:
 
   mynginx:
     image: nginx
+    container_name: myvoting_nginx
     ports:
       - 80:80
     volumes:
@@ -28,7 +30,7 @@ services:
     image: diego/votingapp-test
     build:
       context: ./test
-    container_name: mytest
+    container_name: myvoting_test
     environment:
       VOTINGAPP_HOST: "myvotingapp:8080"
     networks:
